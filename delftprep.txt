@@ -1,0 +1,659 @@
+# DelftPrep - Complete Project Overview
+
+## 🎓 **Project Vision**
+
+**DelftPrep** is a comprehensive online preparation platform for students applying to **TU Delft Aerospace Engineering**. The platform provides exam preparation resources, practice problems, progress tracking, and personalized learning experiences to help students succeed in their admission process.
+
+---
+
+## 🏗️ **Architecture & Technology Stack**
+
+### **Frontend**
+- **Next.js 14** (App Router) with TypeScript
+- **React 18** with Server Components
+- **Framer Motion** for animations
+- **TailwindCSS** for styling
+- **shadcn/ui** for UI components
+- **Zustand** for client-side state management
+
+### **Backend**
+- **Next.js API Routes** (serverless functions)
+- **NextAuth.js v5** for authentication (Google OAuth + email/password)
+- **Prisma ORM** for database management
+- **SQLite** (development) → PostgreSQL (production recommended)
+
+### **Authentication**
+- Google OAuth integration
+- Email/password with bcrypt hashing
+- JWT-based sessions
+- Protected route middleware
+
+### **Payment System** (To be integrated)
+- **Stripe** for subscription management
+- Webhook handlers for payment events
+- Subscription status tracking
+
+---
+
+## 📊 **Database Schema**
+
+### **User Table**
+```
+User {
+  id                 String    (unique identifier)
+  name               String?
+  email              String    (unique)
+  emailVerified      DateTime?
+  image              String?   (profile picture from OAuth)
+  password           String?   (hashed, for email/password auth)
+
+  // Subscription Management
+  subscriptionStatus String    (default: "free")
+                               // Values: "free", "active", "cancelled", "past_due"
+  subscriptionId     String?   (Stripe subscription ID)
+  customerId         String?   (Stripe customer ID)
+  currentPeriodEnd   DateTime? (subscription expiry)
+
+  // Relations
+  accounts           Account[] (OAuth providers)
+  sessions           Session[] (active sessions)
+
+  createdAt          DateTime  (account creation)
+  updatedAt          DateTime  (last modification)
+}
+```
+
+### **Account Table** (OAuth Providers)
+```
+Account {
+  id                 String
+  userId             String
+  type               String    (oauth, email)
+  provider           String    (google, credentials)
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+}
+```
+
+### **Session Table**
+```
+Session {
+  id           String
+  sessionToken String   (unique)
+  userId       String
+  expires      DateTime
+}
+```
+
+### **VerificationToken Table**
+```
+VerificationToken {
+  identifier String
+  token      String   (unique)
+  expires    DateTime
+}
+```
+
+---
+
+## 🎨 **Design System**
+
+### **Color Palette**
+- **Primary**: Blue to Indigo gradients (`from-blue-600 via-indigo-600 to-purple-600`)
+- **Secondary**: Purple to Pink gradients
+- **Accent**: Emerald to Teal (for success states)
+- **Background**: White with subtle gradients
+- **Text**: Dark foreground with muted variants
+
+### **Design Principles**
+1. **Split-screen layouts** for authentication pages (hero + form)
+2. **Gradient backgrounds** with animated blobs for visual interest
+3. **Card-based interfaces** with hover effects and shadows
+4. **Emoji icons** throughout for friendly, approachable feel
+5. **Framer Motion animations** - fadeInUp, stagger, scale, whileInView
+6. **Trust indicators** - student counts, ratings, success rates
+7. **Responsive design** - mobile-first with `lg:` breakpoints
+8. **Glassmorphism effects** - backdrop blur, transparency
+
+### **Animation Patterns**
+```typescript
+// Standard entrance animation
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5 }
+}
+
+// Staggered children
+const staggerContainer = {
+  animate: { transition: { staggerChildren: 0.1 } }
+}
+
+// Viewport triggers
+whileInView={{ opacity: 1, y: 0 }}
+viewport={{ once: true }}
+```
+
+---
+
+## 📄 **Complete Page Structure**
+
+### **1. Landing Page** (`/`)
+**Purpose**: First impression, conversion optimization
+**Sections**:
+- Hero with animated gradient background
+- Trust indicators (500+ students, 4.9/5 rating)
+- Features grid (4 cards with icons)
+- How it works (3-step process)
+- Testimonials from admitted students
+- Pricing preview
+- Final CTA
+
+**Key Features**:
+- Animated blob gradients
+- Staggered card animations
+- Social proof elements
+- Clear value proposition
+
+---
+
+### **2. Authentication Pages**
+
+#### **Login Page** (`/login`)
+**Design**: Split-screen layout
+- **Left side**: Blue→Indigo→Purple gradient
+  - Trust indicators (500+ users, 4.9/5, 87% success)
+  - Featured testimonial with avatar
+  - Quick features list
+  - Animated blobs in background
+
+- **Right side**: Login form
+  - Email input with 📧 icon
+  - Password input with 🔒 icon
+  - "Remember me" checkbox
+  - "Forgot password?" link
+  - Social login buttons (Google, GitHub)
+  - Link to register page
+
+**Functionality** (to be connected):
+- Google OAuth sign-in
+- Email/password authentication
+- Form validation with error messages
+- Redirect to `/dashboard` on success
+
+---
+
+#### **Register Page** (`/register`)
+**Design**: Split-screen layout (similar to login)
+- **Left side**: Indigo→Purple→Pink gradient
+  - Feature highlights
+  - Success statistics
+  - Trust badges
+
+- **Right side**: Registration form
+  - Full name input with 👤 icon
+  - Email input with 📧 icon
+  - Password with strength meter
+  - Confirm password with match indicator
+  - Terms acceptance checkbox
+  - Social registration (Google, GitHub)
+  - Link to login page
+
+**Features**:
+- **Password strength calculator**: Weak/Fair/Good/Strong
+- Real-time password match validation
+- Animated progress bar
+- Terms & conditions links
+
+**Functionality** (to be connected):
+- Create account via `/api/auth/register`
+- Password hashing with bcrypt
+- Auto-login after registration
+- Google OAuth registration
+
+---
+
+#### **Forgot Password Page** (`/forgot-password`)
+**Design**: Split-screen with dual states
+- **Left side**: Emerald→Teal→Cyan gradient
+  - Step-by-step guide (numbered circles)
+  - Security notice with 🔒 icon
+  - Support link to contact page
+
+- **Right side**: Two-state UI
+  - **State 1 (Form)**: Email input + submit button
+  - **State 2 (Success)**:
+    - Green checkmark animation
+    - "Email sent" message
+    - What to do next checklist
+    - "Resend" button
+    - "Send to different email" button
+
+**Functionality** (to be implemented):
+- Password reset email sending
+- Token generation and validation
+- Secure reset flow
+
+---
+
+### **3. Core Pages**
+
+#### **Dashboard Page** (`/dashboard`)
+**Protected**: Requires authentication + active subscription
+**Purpose**: Personalized learning hub
+
+**Current Sections**:
+- Welcome message with user name
+- Progress overview cards
+- Recent activity
+- Quick action buttons
+- Performance metrics
+
+**Planned Enhancements**:
+- **Study statistics**: Hours studied, problems solved, streak
+- **Next recommended problems** based on performance
+- **Calendar integration** for study planning
+- **Achievement badges** (milestones reached)
+- **Progress charts** (Chart.js or Recharts)
+
+**User-Specific Data**:
+```typescript
+const session = await auth()
+// session.user.id - unique for each user
+// session.user.email
+// session.user.name
+// session.user.subscriptionStatus
+// session.user.currentPeriodEnd
+```
+
+Each user sees only their own:
+- Problem completion status
+- Practice history
+- Performance analytics
+- Saved problems
+- Notes and bookmarks
+
+---
+
+#### **Problems Page** (`/problems`)
+**Protected**: Requires active subscription
+**Purpose**: Browse and filter practice problems
+
+**Current Features**:
+- Problem list with difficulty indicators
+- Filters (difficulty, topic, status)
+- Search functionality
+- Progress tracking
+
+**Planned Enhancements**:
+- **Topic categories**: Aerodynamics, Propulsion, Structures, etc.
+- **Difficulty levels**: Easy, Medium, Hard
+- **Status filters**: Not started, In progress, Completed
+- **Smart recommendations**: Based on weak areas
+- **Time estimates**: Expected completion time
+- **Tag system**: Multiple topic tags per problem
+
+---
+
+#### **Problem Detail Page** (`/problems/[id]`)
+**Protected**: Requires active subscription
+**Purpose**: Work through individual problems
+
+**Planned Structure**:
+- Problem statement with images/diagrams
+- Multiple choice or free-response input
+- Hint system (progressive hints)
+- Submit answer functionality
+- Instant feedback
+- Detailed solution explanation
+- Related problems section
+- Bookmark/save functionality
+- Notes section (per-user)
+
+**User Progress Tracking**:
+- Attempts count
+- Time spent
+- Solution viewed (yes/no)
+- User notes
+- Completion status
+
+---
+
+#### **Analysis Page** (`/analysis`)
+**Protected**: Requires active subscription
+**Purpose**: Performance analytics and insights
+
+**Planned Features**:
+- **Overall statistics**:
+  - Total problems attempted
+  - Success rate
+  - Average time per problem
+  - Current streak
+
+- **Topic breakdown**:
+  - Performance by subject area
+  - Weak areas identification
+  - Strength areas
+
+- **Progress over time**:
+  - Daily/weekly/monthly charts
+  - Improvement trends
+  - Study time tracking
+
+- **AI-powered insights**:
+  - Personalized recommendations
+  - Study plan suggestions
+  - Predicted readiness score
+
+---
+
+#### **Settings Page** (`/settings`)
+**Protected**: Requires authentication
+**Purpose**: Account and preference management
+
+**Planned Sections**:
+- **Profile**: Name, email, avatar
+- **Password**: Change password
+- **Subscription**: Current plan, upgrade/cancel
+- **Preferences**:
+  - Email notifications
+  - Study reminders
+  - Difficulty preferences
+- **Data**: Export progress, delete account
+
+---
+
+### **4. Static/Marketing Pages**
+
+#### **About Page** (`/about`)
+**Current Content**:
+- Hero section with gradient background
+- Statistics grid (500+ students, 300+ problems, 87% success, 4.9/5)
+- Origin story (founded by TU Delft alumni)
+- Mission & Vision cards
+- "What We Offer" feature cards
+- Core values (Quality, Accessibility, Innovation, Student Success)
+- CTA section (Get Started + Contact)
+
+---
+
+#### **Pricing Page** (`/pricing`)
+**Current Plans**:
+1. **Free Plan** (€0/month)
+   - 10 practice problems
+   - Basic analytics
+   - Community support
+
+2. **Pro Plan** (€19/month) ⭐ Most Popular
+   - 300+ practice problems
+   - Detailed solutions
+   - AI-powered analysis
+   - Progress tracking
+   - Priority support
+
+3. **Ultimate Plan** (€39/month)
+   - Everything in Pro
+   - 1-on-1 tutoring sessions
+   - Custom study plans
+   - Exam simulation
+   - Dedicated support
+
+**Functionality** (to be connected):
+- Stripe Checkout integration
+- Subscription management
+- Upgrade/downgrade flows
+- Free trial period
+
+---
+
+#### **Contact Page** (`/contact`)
+**Current Content**:
+- Contact form (name, email, subject, message)
+- Email: hello@delftprep.com
+- Social links placeholder
+- FAQ section
+
+**Functionality** (to be implemented):
+- Form submission to email service
+- Auto-responder
+- Ticket system integration
+
+---
+
+#### **Legal Pages**
+- **Privacy Policy** (`/privacy`): GDPR compliance, data handling
+- **Terms of Service** (`/terms`): User agreement, liability
+- **Cookie Policy** (`/cookies`): Cookie usage, consent
+
+---
+
+### **5. NEW FEATURE: Private Tutoring System** 🎯
+
+#### **Tutoring Page** (`/tutoring`) - NEW
+**Purpose**: Connect students with expert tutors for 1-on-1 sessions
+
+**Page Sections**:
+1. **Hero Section**:
+   - "Get Personalized Help from TU Delft Experts"
+   - "1-on-1 tutoring sessions with aerospace engineering students and alumni"
+   - CTA: "Book Your First Session"
+
+2. **How It Works**:
+   - Step 1: Choose your tutor (browse profiles)
+   - Step 2: Select available time slot
+   - Step 3: Video session + shared whiteboard
+   - Step 4: Receive session summary & notes
+
+3. **Tutor Profiles Grid**:
+   - Photo + name
+   - Current status (Student Year 3, Alumni 2023, etc.)
+   - Specializations (Aerodynamics, Propulsion, etc.)
+   - Rating (4.9/5 ⭐)
+   - Hourly rate (€25-€40/hour)
+   - Available times
+   - "Book Session" button
+
+4. **Benefits**:
+   - Personalized attention
+   - Real exam insights
+   - Flexible scheduling
+   - Video + whiteboard
+   - Session recordings
+
+5. **Pricing**:
+   - **Single Session**: €30/hour
+   - **5-Session Pack**: €140 (€28/hour) - Save 7%
+   - **10-Session Pack**: €250 (€25/hour) - Save 17%
+   - Ultimate plan members: Included (2 sessions/month)
+
+#### **Booking System** (`/tutoring/book`) - NEW
+**Flow**:
+1. Select tutor
+2. Choose date & time (calendar view)
+3. Add session notes (what you want to focus on)
+4. Payment (if not included in subscription)
+5. Confirmation email with Zoom/Google Meet link
+
+#### **My Sessions** (`/dashboard/sessions`) - NEW
+**User Dashboard Extension**:
+- **Upcoming sessions**: Date, time, tutor, join link
+- **Past sessions**: Recordings, notes, materials shared
+- **Session history**: Total hours, favorite tutors
+- **Reschedule/Cancel options**
+
+#### **Tutor Dashboard** (`/tutor/dashboard`) - NEW (For tutors only)
+**Features**:
+- Availability calendar management
+- Session requests/bookings
+- Student notes (pre-session)
+- Upload session materials
+- Earnings tracking
+- Student feedback/ratings
+
+#### **Database Extensions for Tutoring**:
+```
+TutorProfile {
+  id              String
+  userId          String    (links to User)
+  bio             String
+  specializations String[]  (array of topics)
+  hourlyRate      Float
+  rating          Float
+  totalSessions   Int
+  availability    Json      (weekly schedule)
+  isActive        Boolean
+}
+
+Session {
+  id              String
+  studentId       String
+  tutorId         String
+  scheduledAt     DateTime
+  duration        Int       (minutes)
+  status          String    ("scheduled", "completed", "cancelled")
+  meetingLink     String
+  sessionNotes    String    (from student)
+  tutorNotes      String    (post-session)
+  recordingUrl    String?
+  price           Float
+}
+
+SessionPackage {
+  id              String
+  userId          String
+  packageType     String    ("single", "5-pack", "10-pack")
+  sessionsTotal   Int
+  sessionsUsed    Int
+  purchasedAt     DateTime
+  expiresAt       DateTime
+}
+```
+
+#### **Integration Points**:
+1. **Stripe Integration**:
+   - One-time session payments
+   - Session package purchases
+   - Tutor payout system
+
+2. **Video Platform**:
+   - Zoom API or Google Meet integration
+   - Automatic meeting link generation
+   - Recording storage (AWS S3)
+
+3. **Scheduling**:
+   - Calendar integration (Google Calendar)
+   - Email reminders (24h before, 1h before)
+   - Timezone handling
+
+4. **Whiteboard**:
+   - Integrated whiteboard (Excalidraw or Miro embedded)
+   - Save/export drawings
+   - Share session materials
+
+---
+
+## 🔐 **Authentication & Authorization Flow**
+
+### **User Journey - New User**:
+1. Land on `/` homepage
+2. Click "Get Started" → `/pricing`
+3. Select plan → redirected to `/register`
+4. Register with Google OR email/password
+5. Account created in database
+6. Automatically logged in
+7. Redirected to `/dashboard`
+8. If free plan: limited access to 10 problems
+9. If paid plan: full access granted
+
+### **User Journey - Returning User**:
+1. Visit `/login`
+2. Sign in with Google OR email/password
+3. Session created
+4. Redirected to `/dashboard`
+5. See personalized data (progress, stats, recommendations)
+
+### **Access Control**:
+- **Public pages**: `/`, `/about`, `/contact`, `/pricing`, legal pages
+- **Auth required**: `/dashboard`, `/problems`, `/analysis`, `/settings`
+- **Subscription required**: `/problems/*`, `/analysis`
+- **Premium required**: `/tutoring` (Ultimate plan or pay-per-session)
+
+### **Middleware Protection**:
+```typescript
+// Automatically checks:
+1. Is user authenticated?
+2. Does user have active subscription?
+3. Is subscription current (not expired)?
+4. Redirect to appropriate page if unauthorized
+```
+
+---
+
+## 💳 **Monetization Strategy**
+
+### **Revenue Streams**:
+1. **Subscriptions** (Primary):
+   - Pro Plan: €19/month
+   - Ultimate Plan: €39/month
+   - Annual plans (15% discount)
+
+2. **Private Tutoring** (Secondary):
+   - Per-session bookings: €30/hour
+   - Session packages
+   - Tutor marketplace commission (20%)
+
+3. **Future Options**:
+   - Corporate/university partnerships
+   - Recorded course sales
+   - Practice exam papers (one-time purchases)
+   - Affiliate partnerships
+
+---
+
+## 📈 **Future Enhancements**
+
+### **Short-term** (Next 3-6 months):
+- Stripe payment integration
+- Private tutoring system
+- Enhanced analytics dashboard
+- Mobile app (React Native)
+- Email notification system
+- Problem recommendation engine
+
+### **Long-term** (6-12 months):
+- AI-powered problem generator
+- Community forum
+- Study groups/peer matching
+- Virtual exam simulations
+- Mobile apps (iOS/Android)
+- Multi-language support (Dutch, English)
+- Integration with university systems
+
+---
+
+## 🎯 **Success Metrics**
+
+### **User Metrics**:
+- Monthly Active Users (MAU)
+- Conversion rate (free → paid)
+- Churn rate
+- Average session duration
+- Problems completed per user
+- NPS (Net Promoter Score)
+
+### **Business Metrics**:
+- Monthly Recurring Revenue (MRR)
+- Customer Lifetime Value (CLV)
+- Customer Acquisition Cost (CAC)
+- Tutoring session booking rate
+- Average revenue per user (ARPU)
+
+---
+
+This is DelftPrep - a comprehensive, modern, and user-focused platform designed to help aerospace engineering aspirants achieve their TU Delft admission goals through quality practice, personalized learning, and expert guidance! 🚀

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "1",
+    "title": "Projectile Motion Basics",
+    "subject": "physics",
+    "difficulty": "easy",
+    "topics": ["mechanics", "kinematics"],
+    "statement": "A projectile is launched at an angle of 45° with an initial velocity of 20 m/s from ground level. Calculate the maximum height reached and the total horizontal range. Assume g = 9.8 m/s².",
+    "solution": "To solve this problem:\n\n1. Break down initial velocity into components:\n   - v₀ₓ = v₀ cos(45°) = 20 × 0.707 = 14.14 m/s\n   - v₀ᵧ = v₀ sin(45°) = 20 × 0.707 = 14.14 m/s\n\n2. Maximum height: H = v₀ᵧ² / (2g)\n   - H = (14.14)² / (2 × 9.8) = 199.94 / 19.6 = 10.2 m\n\n3. Time of flight: T = 2v₀ᵧ / g\n   - T = 2 × 14.14 / 9.8 = 2.89 s\n\n4. Horizontal range: R = v₀ₓ × T\n   - R = 14.14 × 2.89 = 40.86 m\n\nAnswers:\n- Maximum height: 10.2 m\n- Horizontal range: 40.86 m",
+    "hint": "Remember to decompose the initial velocity into horizontal and vertical components first."
+  },
+  {
+    "id": "2",
+    "title": "Lift Coefficient Calculation",
+    "subject": "introAE",
+    "difficulty": "medium",
+    "topics": ["aerodynamics", "lift"],
+    "statement": "An aircraft wing with a planform area of 30 m² is flying at 100 m/s at an altitude where air density is 1.225 kg/m³. If the wing generates 45,000 N of lift, calculate the coefficient of lift (Cₗ).",
+    "solution": "The lift equation is: L = ½ ρ V² S Cₗ\n\nWhere:\n- L = lift force = 45,000 N\n- ρ = air density = 1.225 kg/m³\n- V = velocity = 100 m/s\n- S = wing area = 30 m²\n- Cₗ = coefficient of lift (unknown)\n\nRearranging for Cₗ:\nCₗ = L / (½ ρ V² S)\n\nCₗ = 45,000 / (0.5 × 1.225 × 100² × 30)\nCₗ = 45,000 / (0.5 × 1.225 × 10,000 × 30)\nCₗ = 45,000 / 183,750\nCₗ = 0.245\n\nAnswer: The coefficient of lift is 0.245",
+    "hint": "Use the lift equation: L = ½ ρ V² S Cₗ and solve for Cₗ"
+  },
+  {
+    "id": "3",
+    "title": "Vector Cross Product",
+    "subject": "math",
+    "difficulty": "easy",
+    "topics": ["vectors", "linear algebra"],
+    "statement": "Given vectors A = (2, 3, 1) and B = (1, 0, 4), calculate the cross product A × B.",
+    "solution": "The cross product A × B is calculated using:\n\nA × B = |i  j  k|\n        |2  3  1|\n        |1  0  4|\n\nExpanding the determinant:\ni(3×4 - 1×0) - j(2×4 - 1×1) + k(2×0 - 3×1)\n= i(12 - 0) - j(8 - 1) + k(0 - 3)\n= 12i - 7j - 3k\n\nAnswer: A × B = (12, -7, -3)",
+    "hint": "Use the determinant method with unit vectors i, j, k"
+  },
+  {
+    "id": "4",
+    "title": "Orbital Velocity",
+    "subject": "physics",
+    "difficulty": "hard",
+    "topics": ["orbital mechanics", "gravitation"],
+    "statement": "Calculate the orbital velocity required for a satellite to maintain a circular orbit at an altitude of 400 km above Earth's surface. Earth's radius is 6,371 km and Earth's mass is 5.972 × 10²⁴ kg. G = 6.674 × 10⁻¹¹ N·m²/kg².",
+    "solution": "For circular orbital motion:\n\nOrbital velocity: v = √(GM/r)\n\nWhere:\n- G = 6.674 × 10⁻¹¹ N·m²/kg²\n- M = 5.972 × 10²⁴ kg (Earth's mass)\n- r = orbital radius from Earth's center\n\nStep 1: Calculate orbital radius\nr = Earth radius + altitude\nr = 6,371 km + 400 km = 6,771 km = 6.771 × 10⁶ m\n\nStep 2: Calculate orbital velocity\nv = √[(6.674 × 10⁻¹¹ × 5.972 × 10²⁴) / (6.771 × 10⁶)]\nv = √[(3.986 × 10¹⁴) / (6.771 × 10⁶)]\nv = √(5.886 × 10⁷)\nv = 7,672 m/s\nv ≈ 7.67 km/s\n\nAnswer: The orbital velocity is approximately 7.67 km/s or 27,613 km/h",
+    "hint": "Remember that the orbital radius is measured from Earth's center, not its surface"
+  },
+  {
+    "id": "5",
+    "title": "Drag Force Analysis",
+    "subject": "introAE",
+    "difficulty": "medium",
+    "topics": ["aerodynamics", "drag"],
+    "statement": "A spherical weather balloon with a diameter of 2 m is ascending through air at 5 m/s. Given that the air density is 1.225 kg/m³ and the drag coefficient for a sphere is 0.47, calculate the drag force acting on the balloon.",
+    "solution": "The drag equation is: D = ½ ρ V² Cᴅ A\n\nWhere:\n- ρ = air density = 1.225 kg/m³\n- V = velocity = 5 m/s\n- Cᴅ = drag coefficient = 0.47\n- A = frontal area\n\nStep 1: Calculate frontal area (circle)\nA = π r² = π (d/2)² = π (1)² = π m² ≈ 3.14 m²\n\nStep 2: Calculate drag force\nD = 0.5 × 1.225 × 5² × 0.47 × 3.14\nD = 0.5 × 1.225 × 25 × 0.47 × 3.14\nD = 0.6125 × 25 × 1.476\nD = 22.6 N\n\nAnswer: The drag force is approximately 22.6 N",
+    "hint": "Remember that the frontal area of a sphere is a circle (πr²)"
+  },
+  {
+    "id": "6",
+    "title": "Differential Equations - First Order",
+    "subject": "math",
+    "difficulty": "medium",
+    "topics": ["calculus", "differential equations"],
+    "statement": "Solve the first-order differential equation: dy/dx + 2y = 4x, with initial condition y(0) = 1.",
+    "solution": "This is a first-order linear differential equation.\n\nStep 1: Identify standard form: dy/dx + P(x)y = Q(x)\nHere: P(x) = 2, Q(x) = 4x\n\nStep 2: Find integrating factor\nμ(x) = e^(∫P(x)dx) = e^(∫2dx) = e^(2x)\n\nStep 3: Multiply both sides by μ(x)\ne^(2x) dy/dx + 2e^(2x) y = 4x e^(2x)\n\nStep 4: Left side is d/dx[e^(2x) y]\nd/dx[e^(2x) y] = 4x e^(2x)\n\nStep 5: Integrate both sides\ne^(2x) y = ∫4x e^(2x) dx\n\nUsing integration by parts:\ne^(2x) y = 2x e^(2x) - e^(2x) + C\n\nStep 6: Solve for y\ny = 2x - 1 + C e^(-2x)\n\nStep 7: Apply initial condition y(0) = 1\n1 = 0 - 1 + C\nC = 2\n\nFinal answer: y = 2x - 1 + 2e^(-2x)",
+    "hint": "Use the integrating factor method for first-order linear ODEs"
+  },
+  {
+    "id": "7",
+    "title": "Newton's Second Law Application",
+    "subject": "physics",
+    "difficulty": "easy",
+    "topics": ["mechanics", "dynamics"],
+    "statement": "A 500 kg rocket sled experiences a net force of 10,000 N. If it starts from rest, what is its velocity after 5 seconds?",
+    "solution": "Using Newton's Second Law: F = ma\n\nStep 1: Find acceleration\na = F/m = 10,000 N / 500 kg = 20 m/s²\n\nStep 2: Find velocity using kinematics\nv = u + at\n\nWhere:\n- u = initial velocity = 0 m/s (starts from rest)\n- a = 20 m/s²\n- t = 5 s\n\nv = 0 + 20 × 5 = 100 m/s\n\nAnswer: The velocity after 5 seconds is 100 m/s",
+    "hint": "First find acceleration using F = ma, then use kinematic equations"
+  },
+  {
+    "id": "8",
+    "title": "Bernoulli's Equation",
+    "subject": "introAE",
+    "difficulty": "hard",
+    "topics": ["fluid dynamics", "aerodynamics"],
+    "statement": "Air flows through a wind tunnel. At point 1, the velocity is 30 m/s and the pressure is 101,325 Pa. At point 2, the velocity increases to 90 m/s. Assuming incompressible flow and neglecting height differences, calculate the pressure at point 2. Air density = 1.225 kg/m³.",
+    "solution": "Using Bernoulli's equation for horizontal flow:\nP₁ + ½ρV₁² = P₂ + ½ρV₂²\n\nGiven:\n- P₁ = 101,325 Pa\n- V₁ = 30 m/s\n- V₂ = 90 m/s\n- ρ = 1.225 kg/m³\n\nStep 1: Rearrange for P₂\nP₂ = P₁ + ½ρV₁² - ½ρV₂²\nP₂ = P₁ + ½ρ(V₁² - V₂²)\n\nStep 2: Calculate\nP₂ = 101,325 + 0.5 × 1.225 × (30² - 90²)\nP₂ = 101,325 + 0.6125 × (900 - 8,100)\nP₂ = 101,325 + 0.6125 × (-7,200)\nP₂ = 101,325 - 4,410\nP₂ = 96,915 Pa\n\nAnswer: The pressure at point 2 is 96,915 Pa or approximately 96.9 kPa\n\nNote: Pressure decreases as velocity increases (Venturi effect)",
+    "hint": "Apply Bernoulli's equation and note that as velocity increases, pressure decreases"
+  },
+  {
+    "id": "9",
+    "title": "Matrix Multiplication",
+    "subject": "math",
+    "difficulty": "easy",
+    "topics": ["linear algebra", "matrices"],
+    "statement": "Calculate the product of matrices A and B:\nA = [[2, 1], [3, 4]]\nB = [[5, 2], [1, 3]]",
+    "solution": "Matrix multiplication: C = AB\n\nFor 2×2 matrices:\nC[i,j] = Σ A[i,k] × B[k,j]\n\nCalculating each element:\n\nC[1,1] = 2×5 + 1×1 = 10 + 1 = 11\nC[1,2] = 2×2 + 1×3 = 4 + 3 = 7\nC[2,1] = 3×5 + 4×1 = 15 + 4 = 19\nC[2,2] = 3×2 + 4×3 = 6 + 12 = 18\n\nAnswer: AB = [[11, 7], [19, 18]]",
+    "hint": "Multiply row by column and sum the products"
+  },
+  {
+    "id": "10",
+    "title": "Thrust and Acceleration",
+    "subject": "introAE",
+    "difficulty": "medium",
+    "topics": ["propulsion", "dynamics"],
+    "statement": "A 5,000 kg aircraft has engines that produce 25,000 N of thrust. If air resistance creates a drag force of 8,000 N, calculate the aircraft's acceleration.",
+    "solution": "Using Newton's Second Law: F_net = ma\n\nStep 1: Calculate net force\nF_net = Thrust - Drag\nF_net = 25,000 N - 8,000 N = 17,000 N\n\nStep 2: Calculate acceleration\na = F_net / m\na = 17,000 N / 5,000 kg\na = 3.4 m/s²\n\nAnswer: The aircraft's acceleration is 3.4 m/s²",
+    "hint": "Net force equals thrust minus drag"
+  },
+  {
+    "id": "11",
+    "title": "Integration by Parts",
+    "subject": "math",
+    "difficulty": "medium",
+    "topics": ["calculus", "integration"],
+    "statement": "Evaluate the integral: ∫ x·e^x dx",
+    "solution": "Using integration by parts: ∫u dv = uv - ∫v du\n\nLet:\n- u = x, so du = dx\n- dv = e^x dx, so v = e^x\n\nApplying the formula:\n∫ x·e^x dx = x·e^x - ∫ e^x dx\n∫ x·e^x dx = x·e^x - e^x + C\n∫ x·e^x dx = e^x(x - 1) + C\n\nAnswer: e^x(x - 1) + C",
+    "hint": "Choose u = x and dv = e^x dx for integration by parts"
+  },
+  {
+    "id": "12",
+    "title": "Centripetal Force",
+    "subject": "physics",
+    "difficulty": "medium",
+    "topics": ["mechanics", "circular motion"],
+    "statement": "A 1,200 kg car travels around a circular track with a radius of 50 m at a constant speed of 20 m/s. Calculate the centripetal force required to keep the car in circular motion.",
+    "solution": "Centripetal force formula: F_c = mv²/r\n\nGiven:\n- m = 1,200 kg\n- v = 20 m/s\n- r = 50 m\n\nCalculating:\nF_c = (1,200 × 20²) / 50\nF_c = (1,200 × 400) / 50\nF_c = 480,000 / 50\nF_c = 9,600 N\n\nAnswer: The centripetal force required is 9,600 N or 9.6 kN",
+    "hint": "Use F = mv²/r for centripetal force"
+  }
+]
