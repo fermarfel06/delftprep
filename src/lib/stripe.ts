@@ -1,13 +1,17 @@
 import Stripe from "stripe"
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("STRIPE_SECRET_KEY is not defined in environment variables")
-}
+export const getStripe = () => {
+  const key = process.env.STRIPE_SECRET_KEY
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2024-11-20.acacia" as any,
-  typescript: true,
-})
+  if (!key) {
+    throw new Error("STRIPE_SECRET_KEY is not defined in environment variables")
+  }
+
+  return new Stripe(key, {
+    apiVersion: "2024-11-20.acacia" as any,
+    typescript: true,
+  })
+}
 
 // Price IDs mapping (will be added to .env after creating products)
 export const PRICE_IDS = {

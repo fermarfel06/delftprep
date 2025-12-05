@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
-import { stripe, TIER_DURATIONS } from "@/lib/stripe"
+import { getStripe, TIER_DURATIONS } from "@/lib/stripe"
 
 export const runtime = "nodejs"
 
@@ -54,6 +54,7 @@ export async function POST(req: Request) {
     }
 
     // Create Stripe checkout session
+    const stripe = getStripe()
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],
