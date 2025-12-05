@@ -10,7 +10,13 @@
       "Bash(npx prisma init:*)",
       "Bash(npx prisma migrate:*)",
       "Bash(npx prisma generate:*)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(cat:*)",
+      "Bash(npx prisma db push)",
+      "Bash(set:*)",
+      "Bash(powershell -Command \"$env:DATABASE_URL=''postgresql://postgres:gjt9GyLQVM441MzZ@db.bsvfglemuiytjjxjjbhd.supabase.co:5432/postgres''; npx prisma db push\")",
+      "Bash(npx cross-env:*)",
+      "Bash(npm run dev:*)"
     ],
     "deny": [],
     "ask": []

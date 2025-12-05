@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { signIn } from "next-auth/react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useUserStore } from "@/lib/store/userStore";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -23,7 +23,6 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
 
   const router = useRouter();
-  const { register } = useUserStore();
 
   // Password strength calculator
   const passwordStrength = useMemo(() => {
@@ -61,15 +60,46 @@ export default function RegisterPage() {
       return;
     }
 
+    if (passwordStrength.score < 50) {
+      setError("Password is too weak. Please use a stronger password.");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      // TODO: Replace with actual API call
-      await register(email, password, name);
+      // 1. Create account via registration endpoint
+      const registerRes = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await registerRes.json();
+
+      if (!registerRes.ok) {
+        setError(data.error || "Registration failed. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+
+      // 2. Auto-login after successful registration
+      const signInResult = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (signInResult?.error) {
+        setError("Account created but login failed. Please try logging in manually.");
+        setIsLoading(false);
+        return;
+      }
+
+      // 3. Success - redirect to dashboard
       router.push("/dashboard");
     } catch (err) {
-      setError("Registration failed. Please try again.");
-    } finally {
+      setError("An error occurred. Please try again.");
       setIsLoading(false);
     }
   };
@@ -368,7 +398,7 @@ export default function RegisterPage() {
                         type="button"
                         variant="outline"
                         className="h-11 border-2"
-                        disabled
+                        onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
                       >
                         <span className="mr-2">🔗</span>
                         Google

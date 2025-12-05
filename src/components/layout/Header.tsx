@@ -41,6 +41,12 @@ export function Header() {
                 AI Analysis
               </Link>
               <Link
+                href="/tutoring"
+                className="text-sm font-medium transition-colors hover:text-primary"
+              >
+                Tutoring
+              </Link>
+              <Link
                 href="/pricing"
                 className="text-sm font-medium transition-colors hover:text-primary"
               >
@@ -51,6 +57,12 @@ export function Header() {
 
           {!isAuthenticated && (
             <nav className="hidden md:flex gap-6">
+              <Link
+                href="/tutoring"
+                className="text-sm font-medium transition-colors hover:text-primary"
+              >
+                Tutoring
+              </Link>
               <Link
                 href="/pricing"
                 className="text-sm font-medium transition-colors hover:text-primary"

@@ -12,13 +12,58 @@ import { Badge } from "@/components/ui/badge";
 export default function PricingPage() {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleCheckout = (tier: string) => {
-    setSelectedTier(tier);
-    // TODO: Implement actual checkout flow
-    alert(
-      `Checkout for ${tier} tier will be implemented here.\nTODO: Connect to payment API`
-    );
+  const handleCheckout = async (tierId: string) => {
+    setSelectedTier(tierId);
+    setLoading(true);
+
+    try {
+      // Map tier IDs to Stripe price IDs from environment
+      const priceIds: Record<string, string> = {
+        starter: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER || "",
+        enhanced: process.env.NEXT_PUBLIC_STRIPE_PRICE_ENHANCED || "",
+        complete: process.env.NEXT_PUBLIC_STRIPE_PRICE_COMPLETE || "",
+      };
+
+      const priceId = priceIds[tierId];
+
+      if (!priceId) {
+        alert("Price ID not configured. Please contact support.");
+        setLoading(false);
+        return;
+      }
+
+      // Call API to create checkout session
+      const response = await fetch("/api/checkout/create-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ priceId, tier: tierId }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to create checkout session");
+      }
+
+      // Redirect to Stripe Checkout
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("No checkout URL received");
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to start checkout. Please try again."
+      );
+      setLoading(false);
+    }
   };
 
   const tiers = [
@@ -302,9 +347,17 @@ export default function PricingPage() {
                             ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
                             : ""
                         }`}
-                        onClick={() => handleCheckout(tier.name)}
+                        onClick={() => handleCheckout(tier.id)}
+                        disabled={loading && selectedTier === tier.id}
                       >
-                        {tier.cta} →
+                        {loading && selectedTier === tier.id ? (
+                          <>
+                            <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
+                            Processing...
+                          </>
+                        ) : (
+                          <>{tier.cta} →</>
+                        )}
                       </Button>
                     </CardHeader>
 

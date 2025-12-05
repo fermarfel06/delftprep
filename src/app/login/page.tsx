@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { signIn } from "next-auth/react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useUserStore } from "@/lib/store/userStore";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -21,7 +21,6 @@ export default function LoginPage() {
   const [error, setError] = useState("");
 
   const router = useRouter();
-  const { login } = useUserStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,12 +28,22 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // TODO: Replace with actual API call
-      await login(email, password);
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError("Invalid email or password");
+        setIsLoading(false);
+        return;
+      }
+
+      // Success - redirect to dashboard
       router.push("/dashboard");
     } catch (err) {
-      setError("Invalid email or password");
-    } finally {
+      setError("An error occurred. Please try again.");
       setIsLoading(false);
     }
   };
@@ -261,7 +270,7 @@ export default function LoginPage() {
                         type="button"
                         variant="outline"
                         className="h-11 border-2"
-                        disabled
+                        onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
                       >
                         <span className="mr-2">🔗</span>
                         Google
@@ -276,7 +285,6 @@ export default function LoginPage() {
                         GitHub
                       </Button>
                     </div>
-
                     {/* Sign Up Link */}
                     <div className="text-center pt-4">
                       <p className="text-sm text-muted-foreground">
