@@ -16,7 +16,8 @@
       "Bash(set:*)",
       "Bash(powershell -Command \"$env:DATABASE_URL=''postgresql://postgres:gjt9GyLQVM441MzZ@db.bsvfglemuiytjjxjjbhd.supabase.co:5432/postgres''; npx prisma db push\")",
       "Bash(npx cross-env:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(npm update:*)"
     ],
     "deny": [],
     "ask": []
