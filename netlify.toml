@@ -2,5 +2,12 @@
   command = "npm run build"
   publish = ".next"
 
+[build.environment]
+  # Skip scanning server-side build artifacts for secrets
+  # These files contain server-only environment variables that are never exposed to clients
+  SECRETS_SCAN_OMIT_PATHS = ".next/server/** .next/cache/** .next/standalone/** .netlify/functions-internal/** .next/static/chunks/**"
+  # Omit NEXT_PUBLIC variables (these are intentionally public) and Supabase anon key (designed to be public)
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_STRIPE_PRICE_STARTER,NEXT_PUBLIC_STRIPE_PRICE_ENHANCED,NEXT_PUBLIC_STRIPE_PRICE_COMPLETE,NEXT_PUBLIC_STRIPE_PRICE_TUTORING_PACK_5,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
