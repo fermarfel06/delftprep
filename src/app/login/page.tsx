@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -51,10 +51,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-
-      <main className="flex-1">
+    <main className="flex-1">
         <div className="grid lg:grid-cols-2 min-h-[calc(100vh-4rem)]">
           {/* Left Side - Hero Section */}
           <motion.div
@@ -319,7 +316,16 @@ export default function LoginPage() {
           </div>
         </div>
       </main>
+  );
+}
 
+export default function LoginPage() {
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <Suspense fallback={<div className="flex-1 flex items-center justify-center">Loading...</div>}>
+        <LoginForm />
+      </Suspense>
       <Footer />
     </div>
   );
