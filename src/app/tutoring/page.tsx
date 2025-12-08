@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -12,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 export default function TutoringPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleCheckout = async () => {
     setLoading(true);
@@ -48,6 +50,14 @@ export default function TutoringPage() {
       }
     } catch (error) {
       console.error("Checkout error:", error);
+
+      // Check if error is 401 Unauthorized - redirect to login
+      if (error instanceof Error && error.message.includes("Unauthorized")) {
+        router.push("/login?redirect=" + encodeURIComponent(window.location.pathname));
+        return;
+      }
+
+      // For other errors, show alert
       alert(
         error instanceof Error
           ? error.message

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -13,6 +14,7 @@ export default function PricingPage() {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleCheckout = async (tierId: string) => {
     setSelectedTier(tierId);
@@ -57,6 +59,14 @@ export default function PricingPage() {
       }
     } catch (error) {
       console.error("Checkout error:", error);
+
+      // Check if error is 401 Unauthorized - redirect to login
+      if (error instanceof Error && error.message.includes("Unauthorized")) {
+        router.push("/login?redirect=" + encodeURIComponent(window.location.pathname));
+        return;
+      }
+
+      // For other errors, show alert
       alert(
         error instanceof Error
           ? error.message
